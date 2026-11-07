@@ -8,18 +8,18 @@
    An empty string "" switches that button off.
    ===================================================================== */
 var LINKS={
-  call:      "tel:+917383958977",
+  call:      "tel:+917777975877",
   mail:      "mailto:info@gi1superapp.com",
   maps:      "https://www.google.com/maps/search/?api=1&query=Vadodara",
   instagram: "https://instagram.com/gi1superapp",              // VERIFY
-  whatsapp:  "https://wa.me/917383958977",                     // VERIFY (uses the card phone number)
+  whatsapp:  "https://whatsapp.com/channel/0029Vaah0wc4SpkG4SCQC11d",
   youtube:   "https://youtube.com/@gi1superapp",               // VERIFY
   website:   "https://gi1superapp.com",                        // VERIFY (from your email domain)
   play:      "https://play.google.com/store/search?q=gi1%20prime%20app&c=apps", // VERIFY: replace with the real app page
   reward:    "",                                               // optional: link for the GPay reward panel
   beacon:    ""                                                // optional: scan counter address (see README). "" = off
 };
-var CONTACT={name:"Gi1 Prime App",org:"Gi1 Super App",tel:"+917383958977",telShow:"73839 58977",mail:"info@gi1superapp.com",city:"Vadodara",country:"India"};
+var CONTACT={name:"Gi1 Prime App",org:"Gi1 Super App",tel:"+917777975877",telShow:"77779 75877",mail:"info@gi1superapp.com",city:"Vadodara",country:"India"};
 /* The address the printed QR points to. Leave "" to use the address this page is opened from. */
 var PAGE_URL="https://themsd542.github.io/Gi1-Super-App01/";
 
@@ -37,7 +37,7 @@ var GOLD=[[0,"#6e4a06"],[.15,"#d9a21b"],[.3,"#fff2b3"],[.45,"#f0c24a"],[.62,"#a9
 
 /* ---------- static fill: links, tiles, landing buttons, ticker ---------- */
 var TILES={
-  phone:{i:"assets/tile-phone.png",l:"Call",lt:"t_call",v:"73839 58977",k:"call"},
+  phone:{i:"assets/tile-phone.png",l:"Call",lt:"t_call",v:"77779 75877",k:"call"},
   mail:{i:"assets/tile-mail.png",l:"Email",lt:"t_mail",v:"Send a message",vt:"t_msg",k:"mail"},
   web:{i:"assets/tile-web.png",l:"Website",lt:"t_web",v:"gi1superapp",k:"website"},
   loc:{i:"assets/tile-loc.png",l:"Vadodara",lt:"t_loc",v:"Open in Maps",vt:"t_maps",k:"maps"},
@@ -90,7 +90,7 @@ function makeBackCanvas(cb){var im=new Image();im.onload=function(){var c=cv(im.
   var go=function(){paintBackQR(g,K2000(im),pageUrl());cb(c)};if(logoImg.complete&&logoImg.naturalWidth)go();else logoImg.onload=go};im.src="assets/card-back.jpg"}
 
 /* ---------- three.js scene: the 3D card, rings, Genie coins ---------- */
-var renderer,scene,camera,holder,card,rings=[],coins=[],shineTex,glReady=false,live=false;
+var renderer,scene,camera,holder,card,rings=[],coins=[],shineTex,glReady=false,live=false,peek=false,peekAt=0,peekStep=0,nextPeek=0;
 var FOV=32,CAMZ=14,CW=3.5,CH=3.5*1673/2912;
 var yaw=0,pitch=0,tYaw=0,tPitch=0,uScale=1,tUScale=1,drag=false,moved=0,lx=0,ly=0,ptrs={},pinch0=0,idle=0,t0=0,faceFront=true;
 var gyro={x:0,y:0},cvr={w:300,h:200,l:0,t:0},lastR=0,fsOpen=false;
@@ -160,7 +160,11 @@ function loop(now){
   var sway=(still||drag||idle<150)?0:Math.sin(s*.7)*.2*clamp((idle-150)/90,0,1);
   holder.position.set(0,0,0);holder.scale.setScalar(Math.max(cw*pxw/CW*intro,.001));
   holder.rotation.y=yaw+sway+gyro.x;holder.rotation.x=pitch+gyro.y+(still?0:Math.sin(s*1.1)*.03);
-  var c=Math.cos(yaw+sway);if(faceFront&&c<-.12)setFace(false);else if(!faceFront&&c>.12)setFace(true);
+  /* every few seconds the card turns round to show its back, then returns, so people know there is a back side */
+  if(drag){peek=false}
+  else if(!still&&!peek&&faceFront&&e>3.2&&now>nextPeek&&!trk.on){peek=true;peekAt=now;peekStep=0;tYaw+=Math.PI;idle=0}
+  if(peek){var pt=now-peekAt;if(peekStep===0&&pt>2900){tYaw+=Math.PI;peekStep=1}else if(peekStep===1&&pt>4300){peek=false;nextPeek=now+5500}}
+  if(body.classList.contains("debug"))window.__yaw=yaw;var c=Math.cos(yaw+sway);if(!peek){if(faceFront&&c<-.12)setFace(false);else if(!faceFront&&c>.12)setFace(true)}
   if(!still)shineTex.offset.x=.95-((s*.38)%1.9);
   coins.forEach(function(o,i){var a=i*Math.PI/2+s*.55,k=still?1:clamp((e-1.2-i*.18)/.6,0,1);o.scale.setScalar(Math.max(k,.001));o.position.set(Math.cos(a)*1.74,Math.sin(a)*.92,-Math.sin(a)*.9+.1);o.rotation.y=s*2+i});
   try{renderer.render(scene,camera)}catch(e){glFail()}
@@ -226,7 +230,7 @@ function openFS(){
   var f=$("fsv");$("fsi").hidden=true;f.hidden=false;var ct=story.currentTime||0;f.src=hdSrc||story.currentSrc||story.getAttribute("src");f.addEventListener("loadedmetadata",function mm(){f.removeEventListener("loadedmetadata",mm);try{f.currentTime=ct}catch(e){}});$("fs").hidden=false;fsOpen=true;story.pause();f.muted=false;var p=f.play();if(p&&p.catch)p.catch(function(){f.muted=true;f.play().catch(function(){})})}
 function closeFS(){var f=$("fsv");if(!vFallback){try{story.currentTime=f.currentTime}catch(e){}f.pause();f.removeAttribute("src");f.load()}$("fsi").hidden=true;$("fs").hidden=true;fsOpen=false;if(!vFallback)tryPlay()}
 $("fsx").addEventListener("click",closeFS);
-addEventListener("keydown",function(e){if(e.key==="Escape"){if(!$("sheet").hidden)closeSheet();else if(!$("fs").hidden)closeFS();else if(!$("studio").hidden)location.hash=""}});
+addEventListener("keydown",function(e){if(e.key==="Escape"){if(!$("sheet").hidden)closeSheet();else if(!$("arv").hidden)closeTable();else if(!$("fs").hidden)closeFS();else if(!$("studio").hidden)location.hash=""}});
 
 
 /* ---------- camera tracking: panels float on the PRINTED card (MindAR) ---------- */
@@ -342,22 +346,43 @@ function save(c,name){c.toBlob(function(b){var a=document.createElement("a");a.h
 addEventListener("hashchange",studio);
 
 
-/* ---------- languages: English, Hindi, Gujarati ---------- */
-var T={
- en:{hint:"Point your camera at the front or back of your Gi1 card"},
- hi:{hint:"कैमरा अपने Gi1 कार्ड के आगे या पीछे की ओर करें",story:"Gi1 की कहानी देखें",ceo:"संस्थापक और सीईओ",scan:"QR कोड स्कैन करें",upto:"₹100/- तक पाएं",arqr:"3D AR QR कोड",dl:"ऐप अभी डाउनलोड करें",save:"संपर्क सेव करें",share:"शेयर करें",b3d:"3D व्यू",bar:"AR व्यू",bflip:"कार्ड पलटें",lh:"Gi1 प्राइम कार्ड",ls:"ALL IN 1, IN Gi1. अपना कार्ड 3D और AR में देखने के लिए नीचे टैप करें।",go:"3D / AR में खोलें",t_call:"कॉल",t_mail:"ईमेल",t_web:"वेबसाइट",t_loc:"वडोदरा",t_maps:"मैप में खोलें",t_msg:"संदेश भेजें",shC:"संपर्क",shS:"कार्ड शेयर करें",cp:"कॉपी",cpd:"कॉपी हो गया",vcf:"संपर्क फ़ाइल (.vcf)",wa:"WhatsApp पर भेजें",cl:"लिंक कॉपी करें"},
- gu:{hint:"કૅમેરા તમારા Gi1 કાર્ડના આગળ અથવા પાછળ તરફ રાખો",story:"Gi1 સ્ટોરી જુઓ",ceo:"સ્થાપક અને સીઈઓ",scan:"QR કોડ સ્કેન કરો",upto:"₹100/- સુધી મેળવો",arqr:"3D AR QR કોડ",dl:"એપ હમણાં ડાઉનલોડ કરો",save:"સંપર્ક સેવ કરો",share:"શેર કરો",b3d:"3D વ્યૂ",bar:"AR વ્યૂ",bflip:"કાર્ડ ફેરવો",lh:"Gi1 પ્રાઇમ કાર્ડ",ls:"ALL IN 1, IN Gi1. તમારું કાર્ડ 3D અને AR માં જોવા નીચે ટેપ કરો.",go:"3D / AR માં ખોલો",t_call:"કૉલ",t_mail:"ઇમેઇલ",t_web:"વેબસાઇટ",t_loc:"વડોદરા",t_maps:"મેપમાં ખોલો",t_msg:"સંદેશ મોકલો",shC:"સંપર્ક",shS:"કાર્ડ શેર કરો",cp:"કૉપિ",cpd:"કૉપિ થયું",vcf:"સંપર્ક ફાઇલ (.vcf)",wa:"WhatsApp પર મોકલો",cl:"લિંક કૉપિ કરો"}
-};
+/* ---------- text (English only) ---------- */
+var T={en:{hint:"Point your camera at the front or back of your Gi1 card"}};
 var EN={shC:"Contact",shS:"Share this card",cp:"Copy",cpd:"Copied",vcf:"Contact file (.vcf)",wa:"Send on WhatsApp",cl:"Copy link"};
-var lang="en";try{lang=localStorage.getItem("gi1lang")||"en"}catch(e){}
-if(!T[lang])lang="en";
-function tr(k){return (T[lang]&&T[lang][k])||EN[k]||""}
-function applyLang(){
-  [].forEach.call(document.querySelectorAll("[data-t]"),function(e){var k=e.getAttribute("data-t");if(!k)return;
-    if(e._en===undefined)e._en=e.textContent;var v=(T[lang]&&T[lang][k])||e._en;if(e.textContent!==v)e.textContent=v});
-  document.documentElement.lang=lang;
-  var b=$("blang");if(b)b.textContent=lang==="en"?"A/अ":lang==="hi"?"हि":"ગુ"}
-$("blang").onclick=function(){lang=lang==="en"?"hi":lang==="hi"?"gu":"en";try{localStorage.setItem("gi1lang",lang)}catch(e){}applyLang();track("lang_"+lang)};
+var lang="en";
+function tr(k){return (T.en&&T.en[k])||EN[k]||""}
+function applyLang(){document.documentElement.lang="en"}
+
+
+/* ---------- 3D AR: place the card on a table ----------
+   Uses the free open-source <model-viewer>: Android (Chrome / Scene Viewer) and iPhone (Quick Look) place the card
+   on a real flat surface through the camera. On a computer it shows the 3D card to turn round. Loaded only on tap. */
+var mvLoading=null;
+function loadMV(){if(window.customElements&&customElements.get("model-viewer"))return Promise.resolve();
+  if(mvLoading)return mvLoading;
+  mvLoading=new Promise(function(ok,no){var sc=document.createElement("script");sc.src="vendor/"+"model-viewer.min.js";sc.onload=function(){ok()};sc.onerror=function(){mvLoading=null;no()};document.head.appendChild(sc)});
+  return mvLoading}
+function closeTable(){$("arv").hidden=true;fsOpen=false}
+function openTable(){
+  track("table_ar");var msg=$("arMsg"),host=$("arh");$("arv").hidden=false;fsOpen=true;
+  if(host.querySelector("model-viewer"))return;
+  msg.textContent="Loading the 3D card...";
+  loadMV().then(function(){
+    var m=document.createElement("model-viewer");
+    m.setAttribute("src","assets/"+"gi1-card.glb");
+    m.setAttribute("alt","The Gi1 Prime Card standing on a gold stand");
+    m.setAttribute("ar","");m.setAttribute("ar-modes","webxr scene-viewer quick-look");m.setAttribute("ar-placement","floor");m.setAttribute("ar-scale","auto");
+    m.setAttribute("camera-controls","");m.setAttribute("auto-rotate","");m.setAttribute("shadow-intensity","1");m.setAttribute("environment-image","neutral");m.setAttribute("exposure","1.05");
+    m.setAttribute("camera-orbit","20deg 78deg auto");m.setAttribute("interaction-prompt","none");
+    var b=document.createElement("button");b.slot="ar-button";b.className="btn pri";b.id="arBtn";b.textContent="Place on your table";m.appendChild(b);
+    m.addEventListener("load",function(){
+      msg.textContent=m.canActivateAR?"Tap the gold button, then point your camera at a flat table or floor.":"To place the card on your table, open this page on your phone. Here you can turn the card round with your finger or mouse."});
+    m.addEventListener("error",function(){msg.textContent="The 3D card could not load. Check your internet and try again."});
+    m.addEventListener("ar-status",function(ev){if(ev.detail&&ev.detail.status==="failed")msg.textContent="AR could not start on this phone. Try Chrome on Android or Safari on iPhone."});
+    host.appendChild(m)
+  }).catch(function(){msg.textContent="The 3D viewer could not load. Check your internet and try again."})}
+$("bplace").onclick=function(e){e.stopPropagation();openTable()};
+$("arX").onclick=closeTable;
 
 /* ---------- scan counter (optional) ---------- */
 var CODE="";try{CODE=(location.search.match(/[?&]c=([\w\-]{1,24})/)||[])[1]||""}catch(e){}

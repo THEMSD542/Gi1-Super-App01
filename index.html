@@ -88,8 +88,16 @@
   <button id="b3d" class="on" data-t="b3d">3D view</button>
   <button id="bar-ar" data-t="bar">AR view</button>
   <button id="bflip" data-t="bflip">Flip card</button>
-  <button id="blang" aria-label="Language" title="Language">A/&#2309;</button>
+  <button id="bplace" data-t="bplace">Place on table</button>
 </nav>
+
+
+<!-- ===== 3D AR: place on table ===== -->
+<div id="arv" hidden role="dialog" aria-modal="true" aria-label="Place the card on your table">
+  <button id="arX" aria-label="Close">&times;</button>
+  <div id="arh"></div>
+  <p id="arMsg"></p>
+</div>
 
 <!-- ===== landing ===== -->
 <div id="land">
