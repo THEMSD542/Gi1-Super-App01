@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a1f45">
+<title>Gi1 Prime Card</title>
+<meta name="description" content="Scan the Gi1 Prime Card. See it in 3D and AR. ALL IN 1, IN Gi1.">
+<link rel="icon" href="assets/icon-192.png">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+<link rel="stylesheet" href="app.css">
+</head>
+<body class="s-land f-front">
+
+<!-- ===== background scene (hidden in AR view) ===== -->
+<div id="bg" aria-hidden="true">
+  <div class="bg-base"></div>
+  <div class="bg-lattice"></div>
+  <div class="bg-rays"></div>
+  <div class="bg-glow"></div>
+  <div id="wm"></div>
+  <div id="badges"></div>
+  <canvas id="sparks"></canvas>
+  <div class="bg-vig"></div>
+</div>
+<video id="cam" playsinline muted autoplay></video>
+<canvas id="gl"></canvas>
+
+<!-- corner ribbons, shown on the back side -->
+<div class="ribbon rb-free" aria-hidden="true"><span>FREE</span></div>
+<div class="ribbon rb-prime" aria-hidden="true"><span>PRIME</span></div>
+
+<header id="hud"><img src="assets/logo-gold.png" alt=""><b class="gt">THE PRIME CARD</b><span id="modeLbl">3D view</span></header>
+
+<!-- ===== panels ===== -->
+<main id="ui">
+  <div id="slot" aria-label="The Gi1 Prime Card. Drag to turn, pinch to resize, tap to flip."></div>
+
+  <section id="sV">
+    <div class="panel vp" style="--i:1">
+      <div class="in">
+        <video id="story" playsinline muted loop autoplay disablepictureinpicture preload="none" poster="assets/gi1-story-poster.jpg" data-src="assets/gi1-story.mp4" data-lite="assets/gi1-story-720.mp4"></video>
+        <img id="vanim" alt="Gi1 story" hidden data-src="assets/gi1-story-anim.webp">
+        <div class="vlabel" data-t="story">WATCH THE Gi1 STORY</div>
+        <button id="vplay" class="vplay" aria-label="Play video"><svg viewBox="0 0 24 24" width="28" height="28"><path d="M8 5v14l11-7z" fill="#2a1a00"/></svg></button>
+        <button id="vsnd" class="vsnd" aria-label="Sound on or off"><svg id="icoOff" viewBox="0 0 24 24" width="19" height="19"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16 9l5 6M21 9l-5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><svg id="icoOn" viewBox="0 0 24 24" width="19" height="19" style="display:none"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16 8c2 2.4 2 5.6 0 8M18.6 5.5c3.4 3.7 3.4 9.3 0 13" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg></button>
+        <div class="vfs">TAP FOR FULL SCREEN</div>
+      </div>
+    </div>
+    <div class="panel navy sg" style="--i:2"><div class="in sgn"><small data-t="ceo">Founder &amp; CEO</small><img src="assets/signature-gold.png" alt="M.S.D signature"></div></div>
+  </section>
+
+  <section id="sB">
+    <div class="set sf" id="bF">
+      <div class="panel navy tgp" style="--i:3"><div class="in tg">
+        <span>CDSM</span><span>VIDEOS</span><span>HEALTH &amp; FITNESS</span><span>JOBS</span><span>NEWS</span><span>OPEN CHATS &amp; MORE</span>
+      </div></div>
+    </div>
+    <div class="set sb" id="bB">
+      <div class="panel navy rwp" style="--i:3"><a class="in rw" id="rewardP">
+        <img class="gp" src="assets/gpay.png" alt="GPay">
+        <b class="gt top"><span data-t="scan">SCAN QR CODE</span><br><span data-t="upto">GET UPTO &#8377;100/-</span></b>
+        <canvas id="qrMini" width="300" height="300" aria-label="QR code for this page"></canvas>
+        <span class="rib"><span data-t="arqr">THE 3D AR QR CODE</span></span>
+      </a></div>
+      <div id="tilesB" class="tilesB"></div>
+    </div>
+    <a class="panel dlp" id="playP" style="--i:8"><span class="in"><img src="assets/ic-play.webp" alt=""><b data-t="dl">Download the app now</b></span></a>
+    <div class="panel navy actp" style="--i:9"><div class="in act">
+      <button id="bSave" class="ab" aria-label="Save contact"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10" cy="8" r="3.5"/><path d="M3.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5M19 7v6M16 10h6"/></svg><span data-t="save">Save contact</span></button>
+      <button id="bShare" class="ab" aria-label="Share"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="2.6"/><circle cx="17.5" cy="6" r="2.6"/><circle cx="17.5" cy="18" r="2.6"/><path d="M8.3 10.8l6.9-3.6M8.3 13.2l6.9 3.6"/></svg><span data-t="share">Share</span></button>
+    </div></div>
+  </section>
+
+  <section id="sC">
+    <div class="panel navy" style="--i:9"><div class="in soc">
+      <a class="si" data-k="instagram" aria-label="Instagram"><img src="assets/ic-ig.png" alt=""></a>
+      <a class="si" data-k="whatsapp" aria-label="WhatsApp"><img src="assets/ic-wa.png" alt=""></a>
+      <a class="hd gt" data-k="instagram">@gi1superapp</a>
+      <a class="si" data-k="website" aria-label="Website"><img src="assets/ic-web.png" alt=""></a>
+      <a class="si" data-k="youtube" aria-label="YouTube"><img src="assets/ic-yt.png" alt=""></a>
+    </div></div>
+  </section>
+</main>
+
+<!-- ===== controls ===== -->
+<nav id="bar" aria-label="View controls">
+  <button id="b3d" class="on" data-t="b3d">3D view</button>
+  <button id="bar-ar" data-t="bar">AR view</button>
+  <button id="bflip" data-t="bflip">Flip card</button>
+  <button id="blang" aria-label="Language" title="Language">A/&#2309;</button>
+</nav>
+
+<!-- ===== landing ===== -->
+<div id="land">
+  <div class="sun"></div>
+  <div id="lw">
+    <div class="lgw fu"><i></i><i></i><img class="lg" src="assets/logo-gold.png" alt="Gi1 logo"></div>
+    <h1 id="lh" class="fu gt" data-t="lh">The Gi1 Prime Card</h1>
+    <p id="ls" class="fu" data-t="ls">ALL IN 1, IN Gi1. Tap below to see your card come alive in 3D and AR.</p>
+    <div class="chips fu"><span>FREE REWARDS</span><span>GENIE COINS</span><span>ALL IN 1</span></div>
+    <button class="big pri shine fu" id="go" data-t="go">Open in 3D / AR</button>
+    <div class="row fu" id="lc"></div>
+  </div>
+</div>
+
+<!-- ===== fullscreen video ===== -->
+<div id="fs" hidden><video id="fsv" playsinline controls></video><img id="fsi" alt="Gi1 story" hidden><button id="fsx" aria-label="Close video">&#10005;</button></div>
+
+<!-- ===== QR studio (#qr) ===== -->
+<div id="studio" hidden>
+  <div class="st-box">
+    <h2 class="gt">Gi1 QR maker</h2>
+    <p>Type the final web address where this page lives. The QR and the card back are made for exactly that address.</p>
+    <input id="qrUrl" type="url" inputmode="url" placeholder="https://your-site.com/" aria-label="Page address">
+    <canvas id="qrBig" width="1024" height="1024"></canvas>
+    <div class="row">
+      <button class="pri" id="dlQr">Download QR (PNG)</button>
+      <button class="pri" id="dlBack">Download card back with this QR</button>
+      <button id="stClose">Close</button>
+    </div>
+    <small id="qrNote"></small>
+  </div>
+</div>
+
+<div id="sheet" hidden><div class="sh-box" role="dialog" aria-modal="true"><button id="shX" class="shx" aria-label="Close">&#10005;</button><h2 class="gt" id="shT"></h2><div id="shB"></div></div></div>
+<div id="scanHint" data-t="hint" hidden>Point your camera at the front or back of your Gi1 card</div>
+<div id="toast" role="status"></div>
+
+<script src="vendor/three.min.js"></script>
+<script src="vendor/qrcode.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
